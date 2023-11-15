@@ -8,18 +8,33 @@ const LoginScreen = ( { navigation } ) => {
 
     const [loginError, setLoginError] = useState('');
 
-    const IP_ADDRESS = "10.0.0.16";
+    // REMEMBER THIS IS THE WIFIS IP ADDRESS OF THE COMP TESTING WITH
+    // PC IP ADDRESS
+    // const IP_ADDRESS = "10.0.0.16";
+
+    // PC IP ADDRESS
+    const IP_ADDRESS = '172.20.10.4'
 
     const handleLogin = async (e) => {
         e.preventDefault();
-        
+
         try {
-            const response = await axios.post('http://' + IP_ADDRESS + ':5001/login', {email, password})
-            const data = response.data;
-            console.log("Logged In!");
+            const response = await axios.post('http://' + IP_ADDRESS + ':5001/login', {email, password});
+            console.log(response.data);
+
+            setLoginError('');
+            setEmail('');
+            setPassword('');
+            navigation.navigate("Chat");
 
         } catch (error) {
-            setLoginError(error.response.data.message);
+            console.log(error);
+            if (error.response && error.response.data) {
+                setLoginError(error.response.data.message);
+            } else {
+                // Handle network errors or other cases where response is not available
+                setLoginError('An error occurred. Please try again.');
+            }
         }
     };
 
